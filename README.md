@@ -62,5 +62,53 @@ https://drive.google.com/file/d/1mA1mIw5pobcbCp0FEJ88T2emUkaHuXbK/view?usp=shari
 
 ---
 # ADRs
+## ADR-001: Monolito en capas con servicios separados por responsabilidad
 
+**Estado:** Aceptado
+
+**Contexto:** BackendBank debe exponer APIs bancarias. En el sprint 1 solo existe la gestión de clientes. Se buscó el mismo modelo de capas y servicios que se usa ahora,
+con el servicio apartado del controlador y de la persistencia, pero desplegado dentro de un solo proceso.
+
+**Decisión:** Una sola aplicación Spring Boot (`backendbank`) y una sola base PostgreSQL. El módulo `cliente` queda en tres capas:
+
+- API: `ClienteController`, los records de request/response y `ApiExceptionHandler`
+- Servicio: `ClienteService`
+- Persistencia: `Cliente` y `ClienteRepository`
+
+El controlador no accede a la base. Llama al servicio, y el servicio llama al repositorio.
+
+**Consecuencias:** El despliegue es un solo artefacto y las operaciones de un caso de uso quedan en una transacción. 
+El servicio puede extraerse después sin reescribir las reglas. 
+El riesgo es que `ClienteService` concentre demasiado cuando entren credenciales, permisos y reportes.
+
+## ADR-002: PostgreSQL con JPA y esquema fuera de la aplicación
+
+**Estado:** Aceptado
+
+**Contexto:** Los clientes, sus credenciales y su estado tienen que persistir con unicidad de documento, email y usuario.
+El esquema no debe cambiar solo porque arranque la aplicación.
+
+**Decisión:** Spring Data JPA contra PostgreSQL. 
+En `application.properties`, `spring.jpa.hibernate.ddl-auto=none` y `spring.jpa.open-in-view=false`. 
+La entidad `Cliente` mapea la tabla `clientes`. El id es un UUID asignado en `@PrePersist`. 
+La unicidad se valida en `ClienteService` y, si la base rechaza el insert, `DataIntegrityViolationException` se traduce a `ClienteDuplicadoException`. 
+Los tests usan H2.
+
+**Consecuencias:** El esquema se controla aparte del código y Hibernate no genera DDL en runtime.
+Cada request no mantiene una sesión JPA abierta. 
+Hay dos chequeos de duplicado (servicio y restricción de la base) para cubrir la condición de carrera.
+
+## ADR-003: Autorización por rol en el servicio y errores de dominio en el borde HTTP
+
+**Estado:** Aceptado
+
+**Contexto:** Actualizar un cliente y cambiar su estado son acciones de administrador. El ingreso depende del estado de la cuenta.
+En este sprint no hay un servidor de identidad aparte.
+
+**Decisión:** La identidad del actor viaja como el UUID `actualizadoPor`. `ClienteService.exigirAdministrador` exige que ese cliente exista, esté `activo` y tenga rol `ADMINISTRADOR`.
+Quien se registra queda con rol `CLIENTE` y estado `activo`.
+Las reglas de negocio lanzan excepciones de dominio (`AccesoDenegadoException`, `ClienteDuplicadoException`, `CredencialesInvalidasException`, entre otras) y `ApiExceptionHandler` 
+las convierte en 400, 401, 403, 404 o 409. Los datos de entrada se validan con Jakarta Validation en el controlador.
+
+**Consecuencias:** Las reglas de acceso quedan junto al caso de uso y la API responde siempre con el mismo formato de error. No hay token ni sesión: quien conozca el UUID de un administrador puede ejecutar la acción. La contraseña se guarda y se compara en texto plano; la review del sprint 1 dejó eso para corregirlo en el sprint 2.
 
