@@ -31,6 +31,19 @@ El módulo implementado es la **gestión de clientes**, base para el resto de la
 - Cambio de estado activo/inactivo por un administrador (`PATCH /clientes/{id}/estado`)
 
 Incluye roles (`CLIENTE`, `ADMINISTRADOR`) y estados (`activo`, `inactivo`, `bloqueado`, `pendiente_de_validacion`).
+  
+Este módulo corresponde a las hu's comprometidas en el sprint 1 que fueron:
+- Registrar un nuevo cliente
+- Actualizar datos del perfil de un cliente
+- Cambiar el estado de un cliente (activo/inactivo)
+- Autenticarse en el sistema
+- Restringir acciones según el rol del usuario
+  
+Se debe contemplar algunas recomendaciones que nos hicieron en la review como el manejo de las contraseñas de los clientes que es algo que esta planteado corregirse para el sprint2
+
+En el siguiente video se puede ver como funciona el back que realizamos y como las ejecuciones se reflejan correctamente en la bd:
+https://drive.google.com/file/d/1mA1mIw5pobcbCp0FEJ88T2emUkaHuXbK/view?usp=sharing
+
 
 ---
 # Diagrama de paquetes
