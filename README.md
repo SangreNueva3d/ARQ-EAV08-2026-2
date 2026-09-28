@@ -44,7 +44,10 @@ Se debe contemplar algunas recomendaciones que nos hicieron en la review como el
 En el siguiente video se puede ver como funciona el back que realizamos y como las ejecuciones se reflejan correctamente en la bd:
 https://drive.google.com/file/d/1mA1mIw5pobcbCp0FEJ88T2emUkaHuXbK/view?usp=sharing
 
-
+## Previsto para el sprint 2
+Las historias de usuario del sprint 2 se definirán en la próxima planning.
+También se corregirá el manejo de las contraseñas de los clientes, recomendación de la review del sprint 1.
+Si el tiempo del sprint alcanza, se aplicarán las enseñanzas vistas a lo largo del semestre.
 ---
 # Diagrama de paquetes
 
