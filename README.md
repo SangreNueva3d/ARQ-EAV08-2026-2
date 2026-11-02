@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # EAV08-2026-2
 
 ### Diagrama Entidad Relación 
@@ -86,6 +84,7 @@ erDiagram
 ![Diagrama ERD](Diagramas/ERD.jpg)
 =======
 # ARQ-EAV08-2026-2
+# Sprint 2
 Repositorio para entregables propios de la materia de Arquitectura de Software del equipo avanzado 8 de la edición 26-2 de CodeF@ctory, equipo conformado por:
 
 YEPES JARAMILLO ANGEL SIMON: angel.yepes2@udea.edu.co
@@ -142,15 +141,10 @@ https://drive.google.com/file/d/1mA1mIw5pobcbCp0FEJ88T2emUkaHuXbK/view?usp=shari
 
 ![Diagrama de paquetes](./Diagramas/diagrama_de_paquetes_EAV08.drawio.png)
 
-<<<<<<< HEAD
-=======
----
->>>>>>> origin/main
 # Diagrama de despliegue
 
 ![Diagrama de paquetes](./Diagramas/diagrama_de_desplique_EAV08.drawio.png)
 
-<<<<<<< HEAD
 # Diagrama de componentes
 ![Diagrama de paquetes](./Diagramas/diagrama_de_componentes_EAV08.drawio.png)
 

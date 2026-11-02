@@ -63,15 +63,12 @@ public class Cliente {
     @Column(name = "motivo", length = 200)
     private String motivo;
 
-<<<<<<< HEAD
     @Column(name = "intentos_fallidos", nullable = false)
     private int intentosFallidos;
 
     @Column(name = "bloqueado_hasta")
     private OffsetDateTime bloqueadoHasta;
 
-=======
->>>>>>> origin/main
     @PrePersist
     void asignarValoresIniciales() {
         if (idCliente == null) {
@@ -191,7 +188,6 @@ public class Cliente {
     public void setMotivo(String motivo) {
         this.motivo = motivo;
     }
-<<<<<<< HEAD
 
     public int getIntentosFallidos() {
         return intentosFallidos;
@@ -208,6 +204,4 @@ public class Cliente {
     public void setBloqueadoHasta(OffsetDateTime bloqueadoHasta) {
         this.bloqueadoHasta = bloqueadoHasta;
     }
-=======
->>>>>>> origin/main
 }

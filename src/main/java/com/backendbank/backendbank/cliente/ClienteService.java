@@ -1,12 +1,8 @@
 package com.backendbank.backendbank.cliente;
 
-<<<<<<< HEAD
 import com.backendbank.backendbank.seguridad.TokenService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-=======
-import org.springframework.dao.DataIntegrityViolationException;
->>>>>>> origin/main
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +17,7 @@ public class ClienteService {
     static final String MENSAJE_DOCUMENTO_DUPLICADO = "ya existe un cliente registrado con ese documento";
     static final String MENSAJE_EMAIL_DUPLICADO = "ya existe un cliente registrado con ese email";
     static final String MENSAJE_USUARIO_DUPLICADO = "ya existe un cliente registrado con ese usuario";
-<<<<<<< HEAD
     public static final String MENSAJE_NO_ENCONTRADO = "el cliente no fue encontrado";
-=======
-    static final String MENSAJE_NO_ENCONTRADO = "el cliente no fue encontrado";
->>>>>>> origin/main
     static final String MENSAJE_NO_AUTORIZADO = "no cuento con autorización para realizar esta acción";
     static final String MENSAJE_SESION = "debe ingresar de nuevo";
     static final String MENSAJE_CAMBIO_EXITOSO = "el cambio se realizó exitosamente";
@@ -33,7 +25,6 @@ public class ClienteService {
     static final String MENSAJE_CAMBIO_NO_PERMITIDO = "el cambio de estado no está permitido desde el estado actual";
     static final String MENSAJE_INGRESO = "ingreso exitoso";
     static final String MENSAJE_CREDENCIALES = "el usuario o la contraseña son inválidos";
-<<<<<<< HEAD
     public static final String MENSAJE_INACTIVO = "su usuario está inactivo y debe contactar al banco";
     static final String MENSAJE_BLOQUEADO = "su usuario está bloqueado y debe contactar al banco";
     static final String MENSAJE_BLOQUEO_TEMPORAL =
@@ -56,16 +47,6 @@ public class ClienteService {
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
         this.hashFicticio = passwordEncoder.encode("contrasena-ficticia");
-=======
-    static final String MENSAJE_INACTIVO = "su usuario está inactivo y debe contactar al banco";
-    static final String MENSAJE_BLOQUEADO = "su usuario está bloqueado y debe contactar al banco";
-    static final String MENSAJE_PENDIENTE = "su usuario aún no está activo y debe contactar al banco";
-
-    private final ClienteRepository clienteRepository;
-
-    public ClienteService(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
->>>>>>> origin/main
     }
 
     @Transactional
@@ -94,11 +75,7 @@ public class ClienteService {
         cliente.setNitDocumento(nitDocumento);
         cliente.setEmail(email);
         cliente.setUsuario(usuario);
-<<<<<<< HEAD
         cliente.setContrasena(passwordEncoder.encode(contrasena));
-=======
-        cliente.setContrasena(contrasena);
->>>>>>> origin/main
         cliente.setTelefono(telefono);
         cliente.setEstado(Cliente.ESTADO_ACTIVO);
         cliente.setRol(Cliente.ROL_CLIENTE);
@@ -176,17 +153,12 @@ public class ClienteService {
             return Cliente.ESTADO_ACTIVO.equals(cliente.getEstado());
         }
         if (Cliente.ESTADO_ACTIVO.equals(estadoSolicitado)) {
-<<<<<<< HEAD
             return Cliente.ESTADO_INACTIVO.equals(cliente.getEstado())
                     || Cliente.ESTADO_PENDIENTE_DE_VALIDACION.equals(cliente.getEstado());
-=======
-            return Cliente.ESTADO_INACTIVO.equals(cliente.getEstado());
->>>>>>> origin/main
         }
         return false;
     }
 
-<<<<<<< HEAD
     @Transactional(noRollbackFor = {
             CredencialesInvalidasException.class,
             IngresoRechazadoException.class,
@@ -213,21 +185,10 @@ public class ClienteService {
             } else {
                 throw new IngresoRechazadoException(MENSAJE_BLOQUEADO);
             }
-=======
-    @Transactional(readOnly = true)
-    public IngresoResponse ingresar(IngresoRequest request) {
-        Cliente cliente = clienteRepository.findByUsuario(request.usuario()).orElse(null);
-        if (cliente == null || !request.contrasena().equals(cliente.getContrasena())) {
-            throw new CredencialesInvalidasException(MENSAJE_CREDENCIALES);
-        }
-        if (Cliente.ESTADO_ACTIVO.equals(cliente.getEstado())) {
-            return new IngresoResponse(cliente.getIdCliente(), cliente.getEstado(), MENSAJE_INGRESO);
->>>>>>> origin/main
         }
         if (Cliente.ESTADO_INACTIVO.equals(cliente.getEstado())) {
             throw new IngresoRechazadoException(MENSAJE_INACTIVO);
         }
-<<<<<<< HEAD
         if (!Cliente.ESTADO_ACTIVO.equals(cliente.getEstado())) {
             throw new IngresoRechazadoException(MENSAJE_PENDIENTE);
         }
@@ -280,12 +241,6 @@ public class ClienteService {
         cliente.setMotivo(null);
         cliente.setFechaActualizacion(OffsetDateTime.now());
         clienteRepository.saveAndFlush(cliente);
-=======
-        if (Cliente.ESTADO_BLOQUEADO.equals(cliente.getEstado())) {
-            throw new IngresoRechazadoException(MENSAJE_BLOQUEADO);
-        }
-        throw new IngresoRechazadoException(MENSAJE_PENDIENTE);
->>>>>>> origin/main
     }
 
     private Cliente exigirAdministrador(UUID actualizadoPor) {
@@ -329,16 +284,6 @@ class ClienteDuplicadoException extends RuntimeException {
     }
 }
 
-<<<<<<< HEAD
-=======
-class ClienteNoEncontradoException extends RuntimeException {
-
-    ClienteNoEncontradoException(String mensaje) {
-        super(mensaje);
-    }
-}
-
->>>>>>> origin/main
 class AccesoDenegadoException extends RuntimeException {
 
     AccesoDenegadoException(String mensaje) {
@@ -373,7 +318,6 @@ class IngresoRechazadoException extends RuntimeException {
         super(mensaje);
     }
 }
-<<<<<<< HEAD
 
 class BloqueoTemporalException extends RuntimeException {
 
@@ -381,5 +325,3 @@ class BloqueoTemporalException extends RuntimeException {
         super(mensaje);
     }
 }
-=======
->>>>>>> origin/main

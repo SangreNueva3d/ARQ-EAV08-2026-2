@@ -21,14 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-<<<<<<< HEAD
 import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-=======
-import java.util.ArrayList;
->>>>>>> origin/main
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -136,11 +132,7 @@ record IngresoRequest(
     }
 }
 
-<<<<<<< HEAD
 record IngresoResponse(UUID idCliente, String estado, String mensaje, String token) {
-=======
-record IngresoResponse(UUID idCliente, String estado, String mensaje) {
->>>>>>> origin/main
 }
 
 record ActualizarClienteRequest(
@@ -223,7 +215,6 @@ record MensajeError(String mensaje) {
 @RestControllerAdvice
 class ApiExceptionHandler {
 
-<<<<<<< HEAD
     private static final Map<String, String> ETIQUETAS = Map.ofEntries(
             Map.entry("nombreComercial", "nombre comercial"),
             Map.entry("razonSocial", "razón social"),
@@ -237,32 +228,14 @@ class ApiExceptionHandler {
             Map.entry("idCliente", "id cliente"),
             Map.entry("idCuenta", "id cuenta"),
             Map.entry("numeroCuenta", "número de cuenta")
-=======
-    private static final Map<String, String> ETIQUETAS = Map.of(
-            "nombreComercial", "nombre comercial",
-            "razonSocial", "razón social",
-            "nitDocumento", "documento",
-            "email", "email",
-            "usuario", "usuario",
-            "contrasena", "contraseña",
-            "telefono", "teléfono",
-            "estado", "estado",
-            "motivo", "motivo",
-            "idCliente", "id cliente"
->>>>>>> origin/main
     );
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<?> datosInvalidos(MethodArgumentNotValidException ex) {
-<<<<<<< HEAD
         List<String> orden = ordenDeCampos(ex.getBindingResult().getTarget());
         List<FieldError> datos = ex.getBindingResult().getFieldErrors().stream()
                 .filter(error -> !"actualizadoPor".equals(error.getField()))
                 .sorted(Comparator.comparingInt(error -> indiceDe(orden, error.getField())))
-=======
-        List<FieldError> datos = ex.getBindingResult().getFieldErrors().stream()
-                .filter(error -> !"actualizadoPor".equals(error.getField()))
->>>>>>> origin/main
                 .toList();
         if (datos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -321,14 +294,11 @@ class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MensajeError(ex.getMessage()));
     }
 
-<<<<<<< HEAD
     @ExceptionHandler(BloqueoTemporalException.class)
     ResponseEntity<MensajeError> bloqueoTemporal(BloqueoTemporalException ex) {
         return ResponseEntity.status(HttpStatus.LOCKED).body(new MensajeError(ex.getMessage()));
     }
 
-=======
->>>>>>> origin/main
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ValidacionErrorResponse> cuerpoIlegible(HttpMessageNotReadableException ex) {
         String detalle = String.valueOf(ex.getMostSpecificCause().getMessage()).toLowerCase();
@@ -342,7 +312,6 @@ class ApiExceptionHandler {
                 java.util.List.of(new CampoError("solicitud", "La solicitud debe corregirse"))));
     }
 
-<<<<<<< HEAD
     private List<String> ordenDeCampos(Object cuerpo) {
         if (cuerpo == null || !cuerpo.getClass().isRecord()) {
             return List.of();
@@ -357,8 +326,6 @@ class ApiExceptionHandler {
         return indice < 0 ? orden.size() : indice;
     }
 
-=======
->>>>>>> origin/main
     private boolean esIncompleto(String codigo) {
         return "NotBlank".equals(codigo) || "NotNull".equals(codigo) || "NotEmpty".equals(codigo);
     }
