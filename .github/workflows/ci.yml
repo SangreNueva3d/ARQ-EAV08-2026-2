@@ -1,10 +1,16 @@
 # Integración continua del Sprint 2.
-# En cada push y en cada pull request hay tres jobs encadenados:
-# CI corre JUnit y genera el informe de JaCoCo, Análisis Sonar lo publica
-# en SonarCloud y Cobertura JaCoCo deja ese informe como artefacto propio.
+# En cada push y en cada pull request hay tres jobs:
+# CI corre JUnit y genera el informe de JaCoCo.
+# Análisis Sonar lo publica en el SonarCloud de esta cuenta.
+# Cobertura JaCoCo deja ese informe como artefacto.
 # No despliega la aplicación.
 # Las pruebas usan H2 en memoria (src/test/resources/application.properties),
-# así que CI no necesita PostgreSQL. Sonar sí necesita el secret SONAR_TOKEN.
+# así que CI no necesita PostgreSQL.
+#
+# La clave del proyecto es sangrenueva3d_arq-eav08-2026-2.
+# EAV08_BackendBank se deja en la organización eav08; esta cuenta no publica ahí.
+# La organización del análisis es sangrenueva3d, la cuenta de este repo.
+# SONAR_TOKEN es el token de sangrenueva3d en los secretos de este repositorio.
 
 name: CI
 
@@ -89,7 +95,9 @@ jobs:
 
       # -DskipTests evita repetir JUnit. El XML de cobertura ya está en
       # target/site/jacoco/jacoco.xml, que es la ruta declarada en el pom.
-      # SONAR_TOKEN autentica contra SonarCloud.
+      # La clave y la organización están en el pom:
+      # sangrenueva3d_arq-eav08-2026-2 en sangrenueva3d, no en eav08.
+      # SONAR_TOKEN autentica esta cuenta.
       - name: Publicar el análisis en SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -97,7 +105,7 @@ jobs:
 
   jacoco:
     name: Cobertura JaCoCo
-    needs: sonar
+    needs: ci
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
