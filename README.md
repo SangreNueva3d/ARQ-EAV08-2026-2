@@ -189,7 +189,7 @@ El controlador no accede a la base. Llama al servicio, y el servicio llama al re
 
 En el sprint 1 quedó el módulo de clientes, el modelo y las decisiones de arquitectura. Este sprint muestra cómo ese backend se entrega y se consume.
 
-El diagrama de despliegue dice dónde corre la aplicación y con qué se conecta. Las APIs priorizadas dicen qué se expone primero para un tercero de open banking. Hay ocho APIs REST; las tres de mayor prioridad cubren el mínimo pedido. La documentación de más abajo permite llamarlas sin leer el código. GitHub Actions compila, prueba y publica el análisis en el SonarCloud de esta cuenta cada vez que entra un cambio. OWASP Top Ten registra los riesgos de esta API. Sonar marca hallazgos automáticos de código; no sustituye esa identificación, y el informe no queda en la organización del curso.
+El diagrama de despliegue dice dónde corre la aplicación y con qué se conecta. Las APIs priorizadas dicen qué se expone primero para un tercero de open banking. Hay ocho APIs REST; las tres de mayor prioridad cubren el mínimo pedido. La documentación de más abajo permite llamarlas sin leer el código. GitHub Actions compila y prueba en cada cambio. El análisis de Sonar que se puede mostrar es el del proyecto `backendbank` en la organización EAV08: este repositorio no es de esa cuenta, así que no puede publicar otro. OWASP Top Ten registra los riesgos de esta API. Sonar marca hallazgos automáticos de código y no sustituye esa identificación.
 
 La recomendación de la review sobre las contraseñas quedó atendida: el registro guarda la clave con BCrypt.
 
@@ -314,27 +314,25 @@ Respuesta `200`: `numeroCuenta`, `estado`, `mensaje`. Contraseña incorrecta: `4
 
 ## CI/CD con GitHub Actions
 
-El workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) corre en cada push y en cada pull request. Comprueba el código y publica el análisis. No despliega la aplicación: el despliegue queda descrito en el diagrama y en el `Dockerfile`.
+El workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) corre en cada push y en cada pull request. Comprueba el código. No despliega la aplicación: el despliegue queda descrito en el diagrama y en el `Dockerfile`.
 
 1. **CI.** Instala Java 17, ejecuta `./mvnw verify` y genera el informe JaCoCo. Sube el artefacto `reportes-ci` aunque alguna prueba falle.
-2. **Análisis Sonar.** Toma ese informe y lo envía a SonarCloud con la clave y la organización del `pom`.
+2. **Análisis Sonar.** Intenta enviar el informe a SonarCloud. Publicar en la organización EAV08 exige el token de esa cuenta, y esta copia del repositorio no lo tiene.
 3. **Cobertura JaCoCo.** Comprueba `jacoco.xml` e `index.html` y publica el artefacto `cobertura-jacoco`.
 
 Las pruebas usan H2 en memoria, así que el runner no necesita PostgreSQL.
 
 ## Sonar
 
-La clave que venía en el repositorio, `EAV08_BackendBank`, pertenece a la organización `eav08`. Este equipo no tiene acceso a esa organización, así que el análisis no usa esa clave y no aparece allí.
+El análisis visible está en SonarQube Cloud, organización **EAV08**, proyecto **backendbank**, clave `EAV08_BackendBank`. Es público, tiene 1.6k líneas y el último análisis es del 24 de octubre de 2026. Se abre sin pertenecer a la organización:
 
-La clave de este entregable es otra, `sangrenueva3d_arq-eav08-2026-2`, en el SonarCloud de la cuenta `sangrenueva3d`:
+https://sonarcloud.io/project/overview?id=EAV08_BackendBank
 
-- `sonar.projectKey`: `sangrenueva3d_arq-eav08-2026-2`
-- `sonar.organization`: `sangrenueva3d`
-- `sonar.host.url`: `https://sonarcloud.io`
+Conectar otro Sonar desde este repositorio no es posible: la copia no administra el token de EAV08. Para ver el informe basta con ese enlace. No hace falta copiar el tablero completo en este README ni pedir acceso a la organización.
 
-El job de GitHub Actions se autentica con el secret `SONAR_TOKEN` de esta cuenta. El token de `eav08` no viene con el código. Cuando el análisis corre, el proyecto queda en https://sonarcloud.io/project/overview?id=sangrenueva3d_arq-eav08-2026-2.
+En ese análisis el quality gate está en **Passed**. Hay 14 issues, 0,0 % de duplicación y 86,7 % de cobertura. Seguridad está en A, con 2 issues de severidad Blocker y 0 security hotspots. Confiabilidad está en A, con 9 issues (la mayoría Info y una parte Medium). Mantenibilidad está en A, con 11 issues. El tablero también muestra 2 advertencias del análisis.
 
-Sonar aporta bugs, code smells y security hotspots, y recibe la cobertura de JaCoCo. La sección OWASP sigue siendo la identificación de los diez riesgos sobre estas APIs. Un hotspot no reemplaza esa lectura, y esta lectura no depende del informe de la organización `eav08`.
+Esos números son la evidencia del sprint 2. Corregirlos queda para el sprint 3, porque hace falta poder publicar de nuevo en ese proyecto. La identificación OWASP de la sección siguiente se hizo leyendo el código. Un issue de Sonar no reemplaza esa lectura.
 
 ## Identificación de vulnerabilidades (OWASP Top Ten 2021)
 
@@ -352,3 +350,11 @@ Sonar aporta bugs, code smells y security hotspots, y recibe la cobertura de JaC
 | A10 SSRF | Ningún endpoint pide una URL ni llama a un host elegido por el cliente. La consulta de saldo lee el valor de la propia cuenta. | No aplica al código actual. |
 
 Lo que ya mitiga parte de A02 y A07: BCrypt en el registro, el mismo mensaje de credenciales inválidas en el ingreso, el bloqueo temporal y la firma del token. El hueco que sigue abierto es no usar ese token como prueba de identidad en el resto de operaciones.
+
+# Sprint 3
+
+Todavía no hay planning. Lo que sigue es la intención del sprint, no un compromiso cerrado de historias.
+
+- Corregir bugs que el Sonar de EAV08 ya muestra en `backendbank`. El punto de partida son los 2 issues de seguridad en severidad Blocker, y después los de confiabilidad y mantenibilidad. Cada corrección se demuestra volviendo a mirar ese análisis.
+- Definir en la planning 3 o 4 historias de usuario. Aún no están escritas.
+- Intentar un frontend hecho con IA para el demo, de modo que las APIs de este backend se puedan mostrar desde una pantalla y no solo con peticiones sueltas.
