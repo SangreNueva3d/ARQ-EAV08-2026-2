@@ -193,6 +193,10 @@ El diagrama de despliegue dice dónde corre la aplicación y con qué se conecta
 
 La recomendación de la review sobre las contraseñas quedó atendida: el registro guarda la clave con BCrypt.
 
+Video del sprint 2:
+
+[pegar aquí el enlace]
+
 ## Diagrama de despliegue
 
 BackendBank sigue siendo un solo proceso. No hay un servicio por cada API. Spring Boot atiende todas las rutas, PostgreSQL guarda clientes y cuentas, y el `Dockerfile` produce la imagen que se despliega. El contenedor abre el puerto 8080. La conexión a la base, el puerto y el secreto del token no van fijos en la imagen: entran por `PORT`, `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` y `JWT_SECRET`. Así el mismo artefacto sirve en local y en el entorno desplegado.
