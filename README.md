@@ -195,7 +195,7 @@ La recomendación de la review sobre las contraseñas quedó atendida: el regist
 
 Video del sprint 2:
 
-[pegar aquí el enlace]
+https://drive.google.com/file/d/1pRLfJ40mDJTniv9ZUfW99_DVOvstoAy3/view?usp=sharing
 
 ## Diagrama de despliegue
 
